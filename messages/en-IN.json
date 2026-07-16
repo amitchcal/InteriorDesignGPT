@@ -1,0 +1,31 @@
+{
+  "app": {
+    "name": "Interior AI",
+    "tagline": "Coohom and Foyr render your design. We cost it, quantify it, and write the proposal — in your style, for your market."
+  },
+  "home": {
+    "title": "Design operations, costed for your market",
+    "subtitle": "Upload a floor plan and a brief. Get a concept, a quantified BOQ, a client proposal, and a render — priced in ₹ against Indian rates.",
+    "cta": "Start a project",
+    "marketLabel": "Market",
+    "marketName": "India",
+    "currencyNote": "Amounts shown in ₹ (INR), ex-GST.",
+    "unitsNote": "Dimensions in feet."
+  },
+  "localeSwitcher": {
+    "label": "Locale",
+    "en-IN": "English (India)",
+    "en-US": "English (United States)"
+  },
+  "advisory": {
+    "disclaimer": "Rates are directional estimates and need local verification. Working drawings require sign-off by a licensed professional."
+  },
+  "errors": {
+    "unauthorized": "Please sign in to continue.",
+    "validation_error": "Some details are missing or need a second look.",
+    "not_found": "We couldn't find that.",
+    "quota_exceeded": "You've used every project on your plan. Upgrade to add more.",
+    "provider_error": "A service we rely on didn't respond. Please try again.",
+    "server_error": "Something went wrong on our side."
+  }
+}
