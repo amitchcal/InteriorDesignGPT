@@ -91,7 +91,7 @@
     "cultural": "Cultural guidance",
     "none": "None",
     "intakeUnreadable": "This project's brief couldn't be read.",
-    "nextStep": "BOQ and costing arrive in Task 8."
+    "nextStep": "Proposal PDF arrives in Task 9."
   },
   "floorplan": {
     "title": "Floor plan",
@@ -154,5 +154,25 @@
     "materials": "Materials",
     "palette": "Palette",
     "cameras": "Camera angles"
+  },
+  "boq": {
+    "title": "BOQ — {count} items",
+    "generateCta": "Generate BOQ",
+    "generating": "Costing…",
+    "regenerate": "Re-cost",
+    "conceptFirst": "Generate a concept first.",
+    "failed": "We couldn't cost this project.",
+    "editFailed": "We couldn't save that rate.",
+    "exportXlsx": "Export XLSX",
+    "spec": "Item",
+    "qty": "Qty",
+    "rate": "Rate",
+    "amount": "Amount",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "overBudget": "Over budget by",
+    "underBudget": "Under budget by",
+    "valueEngineering": "Ways to bring this back to budget",
+    "disclaimer": "Rates are directional estimates and need local verification. Working drawings require sign-off by a licensed professional."
   }
 }

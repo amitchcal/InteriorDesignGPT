@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound, redirect } from "next/navigation";
 
+import { BoqView, type BoqLine } from "@/components/boq-view";
 import { ConceptView } from "@/components/concept-view";
 import { ValidationGate } from "@/components/validation-gate";
 import { getMarketProfile } from "@/lib/market";
@@ -46,6 +47,23 @@ export default async function ProjectPage({
   const conceptParsed = latestConcept
     ? conceptSchema.safeParse(latestConcept.concept)
     : null;
+
+  const { data: boqSummary } = await supabase
+    .from("boq_summaries")
+    .select("version, subtotal_minor, tax_minor, total_minor, currency, budget_delta_minor, value_eng")
+    .eq("project_id", id)
+    .order("version", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  const { data: boqItems } = boqSummary
+    ? await supabase
+        .from("boq_items")
+        .select("id, room, item_code, spec, qty, unit, rate_minor, amount_minor, tier")
+        .eq("project_id", id)
+        .eq("version", boqSummary.version)
+        .order("room")
+    : { data: null };
 
   const t = await getTranslations("project");
 
@@ -100,6 +118,29 @@ export default async function ProjectPage({
         initialConcept={conceptParsed?.success ? conceptParsed.data : null}
         initialVersion={latestConcept?.version ?? null}
         canGenerate={project.status !== "draft"}
+      />
+
+      <BoqView
+        projectId={project.id}
+        initialItems={(boqItems ?? []).map(
+          (i): BoqLine => ({ ...i, qty: Number(i.qty) }),
+        )}
+        initialSummary={
+          boqSummary
+            ? {
+                subtotal_minor: boqSummary.subtotal_minor,
+                tax_minor: boqSummary.tax_minor,
+                total_minor: boqSummary.total_minor,
+                currency: boqSummary.currency,
+                budget_delta_minor: boqSummary.budget_delta_minor,
+                value_engineering: boqSummary.value_eng ?? [],
+              }
+            : null
+        }
+        currency={profile.config.currency}
+        locale={profile.config.locale}
+        taxName={profile.config.tax.name}
+        canGenerate={Boolean(latestConcept)}
       />
 
       <p className="text-muted-foreground mt-auto text-xs text-pretty">
