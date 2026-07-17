@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { runEngineJob } from "@/lib/jobs/client";
 
 export function ProposalView({
   projectId,
@@ -25,13 +26,20 @@ export function ProposalView({
   async function generate() {
     setBusy(true);
     setError(null);
-    const res = await fetch(`/api/projects/${projectId}/proposal`, {
-      method: "POST",
-    });
+
+    // Enqueue + poll — copy + PDF render run ~105s on the worker.
+    const outcome = await runEngineJob(`/api/projects/${projectId}/proposal`);
+    if (!outcome.ok) {
+      setBusy(false);
+      setError(outcome.error === "cancelled" ? null : outcome.error || t("failed"));
+      return;
+    }
+
+    // Job done — mint a fresh signed URL for the finished PDF.
+    const res = await fetch(`/api/projects/${projectId}/proposal`);
     setBusy(false);
     if (!res.ok) {
-      const p = await res.json().catch(() => null);
-      setError(p?.error?.message ?? t("failed"));
+      setError(t("failed"));
       return;
     }
     const body = await res.json();

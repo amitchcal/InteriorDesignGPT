@@ -33,12 +33,28 @@ independent of hosting. Buying a domain at GoDaddy does **not** mean hosting at
 GoDaddy.
 
 ## Background jobs (architecture requirement)
-Render dispatch+poll, floor-plan vision parse, and PDF generation are
-long-running and can exceed serverless function timeouts. Provision a
-**queue + worker** (e.g. Inngest / Trigger.dev / Supabase Edge Functions, or a
-small always-on worker). This is the only persistent process in the stack and
-must be wired into Tasks 5 (parse), 9 (PDF), and 10 (render). On an always-on
-host this is native; on Vercel use a background-job service.
+Long-running engine calls can exceed serverless function timeouts. Provision a
+**queue + worker**. This is the only persistent process in the stack.
+
+**Built (2026-07-17):** a Postgres-backed queue — `jobs` table + `enqueue_job`
+/ `claim_job` functions (migration 0012), and a standalone Node worker
+(`npm run worker`, `worker/index.ts`). No external vendor; portable. `claim_job`
+uses `FOR UPDATE SKIP LOCKED`, so several workers can run in parallel with no
+double-claim (verified: 8 workers, 6 jobs, each claimed exactly once).
+
+**What runs on it:** the three engines that actually exceed the limit —
+**Concept (~100s), BOQ (~150s), Proposal (~75s)**. Measured durations, not the
+original guess: this list corrects the spec, which named parse (5), PDF (9) and
+render (10) but not the two heaviest, Concept (7) and BOQ (8).
+
+**Still inline (fine):** floor-plan parse (~9s, best-effort) and render
+(dispatch is instant; the poll loop is already async and client-side). Move
+them onto the queue too if their durations grow.
+
+On Vercel the worker runs as a separate always-on service (Railway/Render/Fly/a
+small VM) pointed at the same Supabase; on an always-on host it's native.
+Original menu of managed options if a hosted queue is later preferred: Inngest /
+Trigger.dev / Supabase Edge Functions.
 
 ## Bill of materials
 | Layer | Service | Notes |

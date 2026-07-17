@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { runEngineJob } from "@/lib/jobs/client";
 import type { Currency } from "@/types/market";
 import type { ValueEngineeringOption } from "@/types/boq";
 
@@ -65,13 +66,25 @@ export function BoqView({
   async function generate() {
     setBusy(true);
     setError(null);
-    const res = await fetch(`/api/projects/${projectId}/boq`, { method: "POST" });
-    setBusy(false);
-    if (!res.ok) {
-      const p = await res.json().catch(() => null);
-      setError(p?.error?.message ?? t("failed"));
+
+    // Enqueue + poll — BOQ runs 3-4 min on the worker.
+    const outcome = await runEngineJob(`/api/projects/${projectId}/boq`);
+    if (!outcome.ok) {
+      setBusy(false);
+      setError(outcome.error === "cancelled" ? null : outcome.error || t("failed"));
       return;
     }
+
+    // Job done — pull the freshly persisted BOQ.
+    const res = await fetch(`/api/projects/${projectId}/boq`);
+    setBusy(false);
+    if (!res.ok) {
+      setError(t("failed"));
+      return;
+    }
+    const body = await res.json();
+    setItems(body.items);
+    setSummary(body.summary);
     router.refresh();
   }
 

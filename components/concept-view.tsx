@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { RoomRender } from "@/components/room-render";
+import { runEngineJob } from "@/lib/jobs/client";
 import type { Concept } from "@/types/concept";
 
 export function ConceptView({
@@ -31,20 +32,25 @@ export function ConceptView({
     setBusy(room ?? "__all__");
     setError(null);
 
-    const res = await fetch(`/api/projects/${projectId}/concept`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(room ? { room } : {}),
+    // Enqueue + poll — the engine runs on the worker (2 min), so this awaits a
+    // job rather than a response.
+    const outcome = await runEngineJob(`/api/projects/${projectId}/concept`, {
+      body: room ? { room } : {},
     });
 
-    setBusy(null);
-
-    if (!res.ok) {
-      const payload = await res.json().catch(() => null);
-      setError(payload?.error?.message ?? t("failed"));
+    if (!outcome.ok) {
+      setBusy(null);
+      setError(outcome.error === "cancelled" ? null : outcome.error || t("failed"));
       return;
     }
 
+    // Job done — pull the freshly persisted concept.
+    const res = await fetch(`/api/projects/${projectId}/concept`);
+    setBusy(null);
+    if (!res.ok) {
+      setError(t("failed"));
+      return;
+    }
     const body = await res.json();
     setConcept(body.concept);
     setVersion(body.version);

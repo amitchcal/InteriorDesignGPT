@@ -8,26 +8,43 @@ import {
   unauthorized,
   validationError,
 } from "@/lib/api/errors";
-import { EngineError, EngineOutputError } from "@/lib/engines/client";
-import { runConceptEngine } from "@/lib/engines/concept";
 import { getMarketProfile } from "@/lib/market";
 import { computeGateFacts } from "@/lib/validation/gate";
-import { conceptRequestSchema, conceptSchema, type Concept } from "@/types/concept";
+import { conceptRequestSchema } from "@/types/concept";
 import { intakeSchema } from "@/types/project";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
+/** GET /api/projects/:id/concept — the latest concept (for the client after a job). */
+export async function GET(_request: NextRequest, { params }: RouteContext) {
+  const ctx = await getAuthedUser();
+  if (!ctx) return unauthorized();
+
+  const { id } = await params;
+  const { data } = await ctx.supabase
+    .from("design_concepts")
+    .select("version, concept")
+    .eq("project_id", id)
+    .order("version", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (!data) return notFound("a concept for this project");
+
+  return NextResponse.json({ version: data.version, concept: data.concept });
+}
+
 /**
- * POST /api/projects/:id/concept — run the Concept Engine (E2-1, E2-2, E2-3).
+ * POST /api/projects/:id/concept — enqueue the Concept Engine (E2-1, E2-2, E2-3).
  *
- * Contract: 201 { version, concept }. Refuses while the gate is not ok -> 422.
+ * Contract: 202 { job_id, status:"queued" }; the client polls GET /api/jobs/:id.
+ * The engine runs 2 minutes, so it runs on the worker, not in this request
+ * (docs/infra.md). The route stays synchronous and cheap: it checks the gate and
+ * enqueues.
  *
- * The gate is re-run here rather than trusting `projects.status`: status is a
+ * The gate is re-checked here rather than trusting `projects.status`: status is a
  * snapshot from whenever /validate last ran, and the brief can change after it
- * (a room deleted, a cultural rule flipped). This engine costs real money and
- * produces a document a client sees, so it checks the facts at the moment it
- * spends rather than believing a stale flag. That is what "engines must refuse
- * to run while ok=false" has to mean to be worth anything.
+ * (a room deleted, a cultural rule flipped). Refusing at enqueue means a bad
+ * request fails fast with 422 instead of becoming a job that fails later.
  */
 export async function POST(request: NextRequest, { params }: RouteContext) {
   const ctx = await getAuthedUser();
@@ -93,77 +110,30 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
     });
   }
 
-  // Latest concept — the base a single-room re-run carries forward (E2-4).
-  const { data: latest } = await ctx.supabase
-    .from("design_concepts")
-    .select("version, concept")
-    .eq("project_id", id)
-    .order("version", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-
-  if (onlyRoom && !latest) {
-    return apiError(
-      "validation_error",
-      "Generate a concept for the whole project first.",
-      { room: "no concept to update yet" },
-    );
-  }
-
-  let generated: Concept;
-  try {
-    generated = await runConceptEngine({
-      market_profile: profile.config,
-      intake: {
-        floor_plan: rooms,
-        client_brief: intake.client_brief,
-        preferences: intake.preferences,
-        cultural_overrides: intake.cultural_overrides,
-      },
-      only_room: onlyRoom,
-    });
-  } catch (error) {
-    if (error instanceof EngineOutputError) {
-      // Provider worked, output wasn't the agreed schema. Not a vendor fault,
-      // and nothing is persisted — CLAUDE.md forbids storing unvalidated output.
+  // Single-room re-run needs a concept to carry forward (E2-4).
+  if (onlyRoom) {
+    const { data: latest } = await ctx.supabase
+      .from("design_concepts")
+      .select("id")
+      .eq("project_id", id)
+      .limit(1)
+      .maybeSingle();
+    if (!latest) {
       return apiError(
-        "provider_error",
-        "The concept came back in an unexpected shape. Please try again.",
+        "validation_error",
+        "Generate a concept for the whole project first.",
+        { room: "no concept to update yet" },
       );
     }
-    if (error instanceof EngineError) {
-      return apiError(
-        "provider_error",
-        "We couldn't generate a concept just now. Please try again.",
-      );
-    }
-    return serverError();
   }
 
-  // Merge a single-room re-run into the previous version rather than replacing
-  // the project's concept with one room (E2-4).
-  let concept: Concept = generated;
-  if (onlyRoom && latest) {
-    const base = conceptSchema.safeParse(latest.concept);
-    if (!base.success) return serverError();
-    const fresh = generated.rooms.find((r) => r.name === onlyRoom) ?? generated.rooms[0];
-    concept = {
-      ...base.data,
-      rooms: base.data.rooms.map((r) => (r.name === onlyRoom ? fresh : r)),
-      assumptions: base.data.assumptions,
-    };
-  }
+  // Enqueue — the worker runs the engine. enqueue_job checks ownership.
+  const { data: jobId, error: enqueueError } = await ctx.supabase.rpc("enqueue_job", {
+    p_kind: "concept",
+    p_project: id,
+    p_payload: onlyRoom ? { room: onlyRoom } : {},
+  });
+  if (enqueueError || !jobId) return serverError();
 
-  const version = (latest?.version ?? 0) + 1;
-
-  const { error: insertError } = await ctx.supabase
-    .from("design_concepts")
-    .insert({ project_id: id, version, concept });
-  if (insertError) return serverError();
-
-  if (project.status === "validated") {
-    await ctx.supabase.from("projects").update({ status: "concept" }).eq("id", id);
-  }
-
-  return NextResponse.json({ version, concept }, { status: 201 });
+  return NextResponse.json({ job_id: jobId, status: "queued" }, { status: 202 });
 }
