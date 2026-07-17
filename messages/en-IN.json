@@ -191,5 +191,13 @@
     "preparedFor": "Prepared for",
     "subtotal": "Subtotal",
     "total": "Total"
+  },
+  "render": {
+    "render": "Render this room",
+    "regenerate": "Render again",
+    "rendering": "Rendering…",
+    "failed": "We couldn't render this room.",
+    "timedOut": "The render is taking longer than expected. Try again.",
+    "alt": "AI render of {room}"
   }
 }

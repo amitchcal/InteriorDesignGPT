@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { RoomRender } from "@/components/room-render";
 import type { Concept } from "@/types/concept";
 
 export function ConceptView({
@@ -181,6 +182,9 @@ export function ConceptView({
                 />
               </div>
             </details>
+
+            {/* E4-2: render this room from its brief. */}
+            <RoomRender projectId={projectId} room={room.name} />
           </article>
         ))}
       </div>
