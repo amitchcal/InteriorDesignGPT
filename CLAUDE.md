@@ -80,6 +80,10 @@ and write the proposal — in your style, for your market."
   /market            getMarketProfile(), getRates()
   /supabase          server + browser clients
 /supabase/migrations runnable DDL (0001_init.sql is the schema of record)
+                     0002 seeds markets, 0003 seeds IN rates — in that order.
+                     (Corrected 2026-07-16: the original pack shipped these
+                     swapped, which fails the rate_libraries -> market_profiles
+                     FK. Any new market seed must precede its rate seed.)
 /docs                specs: api-contracts.md, prompts/, build-tasks.md
 /messages            next-intl locale files (en-IN, en-US, ...)
 ```

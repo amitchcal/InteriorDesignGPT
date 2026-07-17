@@ -41,8 +41,8 @@ API calls with `401 unauthorized`.
 ## Task 3 — Localization core
 **Delivers:** E6-1, E6-2 (Must); E1-4 backing.
 **Goal:** Stand up the moat factory **before** any engine.
-**Create:** apply `0001`–`0004`; confirm `0002_seed_rates_in.sql` and
-`0003_seed_markets.sql` loaded; `/lib/market/getMarketProfile(code)` and
+**Create:** apply `0001`–`0004`; confirm `0002_seed_markets.sql` and
+`0003_seed_rates_in.sql` loaded; `/lib/market/getMarketProfile(code)` and
 `getRates(code,{tier?,region?})`; `GET /api/markets`.
 **Depends on:** 2.
 **Acceptance:**
