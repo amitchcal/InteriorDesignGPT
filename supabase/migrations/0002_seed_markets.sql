@@ -3,7 +3,7 @@ insert into market_profiles (market_code, config, version, active) values
 ('IN', '{
   "display_name":"India","locale":"en-IN",
   "currency":{"code":"INR","symbol":"₹","format":"##,##,###"},
-  "units":"metric","area_basis":"carpet_area",
+  "units":"imperial","area_basis":"carpet_area",
   "tax":{"name":"GST","default_rate":0.18,"applies_to":"interior_works"},
   "rate_library_ref":"rates_in_v1",
   "standards":{"ergonomics":"NBC_IS","kitchen":"generic_work_triangle","accessibility":null},

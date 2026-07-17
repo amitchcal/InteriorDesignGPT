@@ -60,7 +60,14 @@ options, and cultural-rule toggles all render from the selected `market_profile`
 persist `intake`.
 **Depends on:** 3.
 **Acceptance:**
-- [M] Market IN → ₹/metric/vastu-toggle; US → $/imperial/feng-shui-off (E1-4).
+- [M] Market IN → ₹/feet/vastu-toggle; US → $/feet/feng-shui-off (E1-4).
+      (Corrected 2026-07-17: this said "IN → ₹/metric". The IN profile shipped
+      `units:"metric"` while 51 of its 64 rate rows are priced per sqft/rft and
+      `area_basis` is carpet_area — measured in square feet. Under "metric" the
+      BOQ would compute m² and cost it at ₹/sqft: every quote wrong by 10.76x.
+      Fixed in 0010 by data, not engine code. What the criterion is really
+      testing — that units come from the profile and nothing is hardcoded —
+      still holds; only IN's own value was wrong.)
 - [M] Mandatory brief fields captured and persisted to `projects.intake` (E1-3).
 - [M] Creating beyond plan quota returns `402 quota_exceeded` (E5-3).
 
