@@ -1,10 +1,12 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound, redirect } from "next/navigation";
 
+import { ConceptView } from "@/components/concept-view";
 import { ValidationGate } from "@/components/validation-gate";
 import { getMarketProfile } from "@/lib/market";
 import { formatMoney } from "@/lib/market/money";
 import { createClient } from "@/lib/supabase/server";
+import { conceptSchema } from "@/types/concept";
 import { intakeSchema } from "@/types/project";
 
 export default async function ProjectPage({
@@ -32,6 +34,18 @@ export default async function ProjectPage({
 
   const profile = await getMarketProfile(project.market_code);
   const parsed = intakeSchema.safeParse(project.intake);
+
+  const { data: latestConcept } = await supabase
+    .from("design_concepts")
+    .select("version, concept")
+    .eq("project_id", id)
+    .order("version", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  const conceptParsed = latestConcept
+    ? conceptSchema.safeParse(latestConcept.concept)
+    : null;
 
   const t = await getTranslations("project");
 
@@ -79,6 +93,13 @@ export default async function ProjectPage({
       <ValidationGate
         projectId={project.id}
         rules={profile.config.cultural_rules}
+      />
+
+      <ConceptView
+        projectId={project.id}
+        initialConcept={conceptParsed?.success ? conceptParsed.data : null}
+        initialVersion={latestConcept?.version ?? null}
+        canGenerate={project.status !== "draft"}
       />
 
       <p className="text-muted-foreground mt-auto text-xs text-pretty">

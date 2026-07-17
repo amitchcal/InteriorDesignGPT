@@ -91,7 +91,7 @@
     "cultural": "Cultural guidance",
     "none": "None",
     "intakeUnreadable": "This project's brief couldn't be read.",
-    "nextStep": "Concept generation arrives in Task 7."
+    "nextStep": "BOQ and costing arrive in Task 8."
   },
   "floorplan": {
     "title": "Floor plan",
@@ -135,5 +135,24 @@
       "rooms": "Rooms — none confirmed yet",
       "roomCeiling": "Ceiling height for room {n}"
     }
+  },
+  "concept": {
+    "title": "Concept — v{version}",
+    "generateCta": "Generate concept",
+    "generating": "Generating…",
+    "regenerateAll": "Regenerate all",
+    "regenerateRoom": "Regenerate",
+    "gateFirst": "Complete the brief above first.",
+    "failed": "We couldn't generate a concept.",
+    "appliedRules": "Cultural rules applied: {rules}",
+    "features": "Key features",
+    "clearances": "Clearance issues",
+    "cultural": "Cultural trade-offs",
+    "assumptions": "Assumptions",
+    "renderBrief": "Render brief",
+    "lighting": "Lighting",
+    "materials": "Materials",
+    "palette": "Palette",
+    "cameras": "Camera angles"
   }
 }
