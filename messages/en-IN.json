@@ -49,5 +49,48 @@
     "noName": "Not set",
     "defaultMarket": "Default market",
     "placeholder": "Projects arrive in Task 4. Your account and profile are live."
+  },
+  "intake": {
+    "title": "New project",
+    "subtitle": "The brief drives everything downstream — concept, costing, and the proposal.",
+    "projectName": "Project name",
+    "market": "Market",
+    "marketHint": "Priced in {currency} · {units} · {tax}",
+    "budget": "Total budget ({symbol})",
+    "ceilingHeight": "Ceiling height ({unit})",
+    "tier": "Finish tier",
+    "constructionMode": "Construction",
+    "noPreference": "No preference",
+    "cultural": "Cultural guidance",
+    "notes": "Notes for the designer (optional)",
+    "create": "Create project",
+    "creating": "Creating…",
+    "units": {
+      "metric": "metric",
+      "imperial": "imperial"
+    },
+    "tiers": {
+      "economy": "Economy",
+      "premium": "Premium",
+      "luxury": "Luxury"
+    },
+    "errors": {
+      "unauthorized": "Please sign in to continue.",
+      "validation_error": "Some details are missing or need a second look.",
+      "not_found": "We couldn't find that.",
+      "quota_exceeded": "You've used every project on your plan. Upgrade to add more.",
+      "provider_error": "A service we rely on didn't respond. Please try again.",
+      "server_error": "Something went wrong on our side."
+    }
+  },
+  "project": {
+    "meta": "{market} · {status}",
+    "budget": "Budget",
+    "ceiling": "Ceiling height",
+    "tier": "Finish tier",
+    "cultural": "Cultural guidance",
+    "none": "None",
+    "intakeUnreadable": "This project's brief couldn't be read.",
+    "nextStep": "Floor plan upload arrives in Task 5."
   }
 }
