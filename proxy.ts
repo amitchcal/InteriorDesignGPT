@@ -18,9 +18,6 @@ import { createProxyClient } from "./lib/supabase/proxy";
  */
 const intlMiddleware = createMiddleware(routing);
 
-/** Endpoints that must stay reachable while signed out. */
-const PUBLIC_API_ROUTES = ["/api/markets"];
-
 export default async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -34,7 +31,10 @@ export default async function proxy(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser();
 
-    if (!user && !PUBLIC_API_ROUTES.some((r) => pathname.startsWith(r))) {
+    // Every API route requires a session (api-contracts.md). Reference data is
+    // no exception: `markets_read` RLS is gated on auth.role()='authenticated',
+    // so an anonymous read would come back empty regardless.
+    if (!user) {
       // Shape must match lib/api/errors.ts — this bypasses the route handler.
       return NextResponse.json(
         { error: { code: "unauthorized", message: "Sign in to continue." } },
