@@ -91,7 +91,7 @@
     "cultural": "Cultural guidance",
     "none": "None",
     "intakeUnreadable": "This project's brief couldn't be read.",
-    "nextStep": "Validation gate arrives in Task 6."
+    "nextStep": "Concept generation arrives in Task 7."
   },
   "floorplan": {
     "title": "Floor plan",
@@ -116,5 +116,24 @@
     "removeRoom": "Remove room",
     "confirmCta": "Confirm rooms",
     "saving": "Saving…"
+  },
+  "validate": {
+    "checking": "Checking the brief…",
+    "failed": "We couldn't check this brief.",
+    "ready": "Ready to generate a concept",
+    "readyHint": "The brief is complete and your cultural guidance is confirmed.",
+    "blockedTitle": "This brief needs a few things first",
+    "blockedHint": "Design and costing run on these answers, so they have to be right before we start.",
+    "missingTitle": "Missing",
+    "confirmTitle": "Confirm your cultural guidance",
+    "confirmCta": "Confirm",
+    "saving": "Saving…",
+    "field": {
+      "budget_total": "Total budget",
+      "market_code": "Market",
+      "finish_tier": "Finish tier",
+      "rooms": "Rooms — none confirmed yet",
+      "roomCeiling": "Ceiling height for room {n}"
+    }
   }
 }

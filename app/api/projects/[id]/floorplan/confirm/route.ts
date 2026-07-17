@@ -10,6 +10,7 @@ import {
 } from "@/lib/api/errors";
 import { getMarketProfile } from "@/lib/market";
 import { confirmSchema } from "@/types/floorplan";
+import { intakeSchema } from "@/types/project";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -39,7 +40,7 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
 
   const { data: project } = await ctx.supabase
     .from("projects")
-    .select("id, market_code")
+    .select("id, market_code, intake")
     .eq("id", projectId)
     .maybeSingle();
   if (!project) return notFound("that project");
@@ -73,13 +74,23 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
     .eq("project_id", projectId);
   if (deleteError) return serverError();
 
+  // Plans almost never annotate ceiling height, so the vision parse returns null
+  // for it — but Task 6's gate requires a ceiling_ht on every room. Without a
+  // default, every parsed project would arrive at the gate blocked on all N
+  // rooms for a value the brief already carries. Fall back to the brief's
+  // ceiling; a room that genuinely differs is still editable in the wizard.
+  const intake = intakeSchema.safeParse(project.intake);
+  const briefCeiling = intake.success
+    ? intake.data.client_brief.ceiling_height
+    : null;
+
   const { error: insertError } = await ctx.supabase.from("rooms").insert(
     parsed.data.rooms.map((room) => ({
       project_id: projectId,
       name: room.name,
       length: room.length,
       width: room.width,
-      ceiling_ht: room.ceiling_ht ?? null,
+      ceiling_ht: room.ceiling_ht ?? briefCeiling,
       unit: room.unit,
       meta: room.meta,
     })),

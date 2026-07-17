@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound, redirect } from "next/navigation";
 
+import { ValidationGate } from "@/components/validation-gate";
 import { getMarketProfile } from "@/lib/market";
 import { formatMoney } from "@/lib/market/money";
 import { createClient } from "@/lib/supabase/server";
@@ -74,6 +75,11 @@ export default async function ProjectPage({
       ) : (
         <p className="text-destructive text-sm">{t("intakeUnreadable")}</p>
       )}
+
+      <ValidationGate
+        projectId={project.id}
+        rules={profile.config.cultural_rules}
+      />
 
       <p className="text-muted-foreground mt-auto text-xs text-pretty">
         {t("nextStep")}

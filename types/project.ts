@@ -46,6 +46,16 @@ export const intakeSchema = z.object({
   client_brief: clientBriefSchema,
   preferences: preferencesSchema,
   cultural_overrides: culturalOverridesSchema.default({}),
+  /**
+   * Rule ids the user has explicitly confirmed at the Task 6 gate.
+   *
+   * Distinct from `cultural_overrides`, which the intake form pre-fills from
+   * the market's `default_on`. A defaulted value is an assumption; this is an
+   * answer. Vastu decides where a kitchen or toilet may go, so "the form
+   * defaulted it on and nobody looked" is not a basis for a concept the client
+   * pays for — build-tasks requires the rule be *confirmed* before Concept runs.
+   */
+  cultural_confirmed: z.array(z.string()).default([]),
 });
 
 export type Intake = z.infer<typeof intakeSchema>;
