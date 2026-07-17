@@ -27,5 +27,27 @@
     "quota_exceeded": "You've used every project on your plan. Upgrade to add more.",
     "provider_error": "A service we rely on didn't respond. Please try again.",
     "server_error": "Something went wrong on our side."
+  },
+  "auth": {
+    "title": "Sign in to Interior AI",
+    "subtitle": "Use your email, or continue with GitHub.",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign in",
+    "signUp": "Create account",
+    "signOut": "Sign out",
+    "working": "Working…",
+    "continueWithGithub": "Continue with GitHub",
+    "needAccount": "No account? Create one",
+    "haveAccount": "Already have an account? Sign in",
+    "checkEmail": "Check your email to confirm your account."
+  },
+  "dashboard": {
+    "title": "Your projects",
+    "signedInAs": "Signed in as {email}",
+    "profileName": "Name",
+    "noName": "Not set",
+    "defaultMarket": "Default market",
+    "placeholder": "Projects arrive in Task 4. Your account and profile are live."
   }
 }
