@@ -91,7 +91,7 @@
     "cultural": "Cultural guidance",
     "none": "None",
     "intakeUnreadable": "This project's brief couldn't be read.",
-    "nextStep": "Proposal PDF arrives in Task 9."
+    "nextStep": "Room renders arrive in Task 10."
   },
   "floorplan": {
     "title": "Floor plan",
@@ -174,5 +174,22 @@
     "underBudget": "Under budget by",
     "valueEngineering": "Ways to bring this back to budget",
     "disclaimer": "Rates are directional estimates and need local verification. Working drawings require sign-off by a licensed professional."
+  },
+  "proposal": {
+    "title": "Proposal",
+    "generateCta": "Generate proposal PDF",
+    "generating": "Writing the proposal…",
+    "regenerate": "Regenerate proposal",
+    "boqFirst": "Generate a BOQ first.",
+    "failed": "We couldn't generate the proposal.",
+    "download": "Download PDF",
+    "ready": "Proposal v{version} is ready.",
+    "linkNote": "This link is private and expires in an hour.",
+    "investment": "Investment",
+    "nextSteps": "Next steps",
+    "valueEngineering": "Options to consider",
+    "preparedFor": "Prepared for",
+    "subtotal": "Subtotal",
+    "total": "Total"
   }
 }

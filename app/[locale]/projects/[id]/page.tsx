@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 
 import { BoqView, type BoqLine } from "@/components/boq-view";
 import { ConceptView } from "@/components/concept-view";
+import { ProposalView } from "@/components/proposal-view";
 import { ValidationGate } from "@/components/validation-gate";
 import { getMarketProfile } from "@/lib/market";
 import { formatMoney } from "@/lib/market/money";
@@ -64,6 +65,14 @@ export default async function ProjectPage({
         .eq("version", boqSummary.version)
         .order("room")
     : { data: null };
+
+  const { data: existingProposal } = await supabase
+    .from("proposals")
+    .select("version")
+    .eq("project_id", id)
+    .order("version", { ascending: false })
+    .limit(1)
+    .maybeSingle();
 
   const t = await getTranslations("project");
 
@@ -141,6 +150,12 @@ export default async function ProjectPage({
         locale={profile.config.locale}
         taxName={profile.config.tax.name}
         canGenerate={Boolean(latestConcept)}
+      />
+
+      <ProposalView
+        projectId={project.id}
+        hasBoq={Boolean(boqSummary)}
+        existingVersion={existingProposal?.version ?? null}
       />
 
       <p className="text-muted-foreground mt-auto text-xs text-pretty">
