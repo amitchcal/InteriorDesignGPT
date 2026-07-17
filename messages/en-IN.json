@@ -91,6 +91,30 @@
     "cultural": "Cultural guidance",
     "none": "None",
     "intakeUnreadable": "This project's brief couldn't be read.",
-    "nextStep": "Floor plan upload arrives in Task 5."
+    "nextStep": "Validation gate arrives in Task 6."
+  },
+  "floorplan": {
+    "title": "Floor plan",
+    "subtitle": "Upload a plan for {project}, or enter the rooms yourself.",
+    "uploadCta": "Upload a floor plan",
+    "uploadHint": "PDF, JPEG, PNG, GIF or WebP",
+    "uploading": "Uploading…",
+    "parsing": "Reading the plan…",
+    "uploadFailed": "We couldn't upload that file.",
+    "parseFailed": "We couldn't read that plan. You can enter the rooms yourself.",
+    "saveFailed": "We couldn't save those rooms.",
+    "manualCta": "Enter rooms manually instead",
+    "checkFlagged": "Some dimensions were hard to read — the flagged rooms are worth checking.",
+    "confidence": "{pct}% sure",
+    "roomName": "Room name",
+    "length": "Length ({unit})",
+    "width": "Width ({unit})",
+    "ceiling": "Ceiling ({unit})",
+    "doors": "Doors",
+    "windows": "Windows",
+    "addRoom": "Add a room",
+    "removeRoom": "Remove room",
+    "confirmCta": "Confirm rooms",
+    "saving": "Saving…"
   }
 }
