@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 
 import { BoqView, type BoqLine } from "@/components/boq-view";
 import { ConceptView } from "@/components/concept-view";
+import { DnaPicker, type DnaOption } from "@/components/dna-picker";
 import { ProposalView } from "@/components/proposal-view";
 import { ValidationGate } from "@/components/validation-gate";
 import { getMarketProfile } from "@/lib/market";
@@ -74,6 +75,11 @@ export default async function ProjectPage({
     .limit(1)
     .maybeSingle();
 
+  const { data: dnaProfiles } = await supabase
+    .from("designer_dna_profiles")
+    .select("id, name, source_count")
+    .order("created_at", { ascending: false });
+
   const t = await getTranslations("project");
 
   return (
@@ -121,6 +127,14 @@ export default async function ProjectPage({
         projectId={project.id}
         rules={profile.config.cultural_rules}
       />
+
+      {dnaProfiles && dnaProfiles.length > 0 && (
+        <DnaPicker
+          projectId={project.id}
+          options={dnaProfiles as DnaOption[]}
+          currentDnaId={parsed.success ? (parsed.data.dna_id ?? null) : null}
+        />
+      )}
 
       <ConceptView
         projectId={project.id}

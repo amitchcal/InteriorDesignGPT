@@ -9,6 +9,7 @@ import type { JobHandler } from "../types";
 /** Proposal job — engine copy, PDF render, private upload, persist. */
 export const proposalHandler: JobHandler = async (svc, job) => {
   const projectId = job.project_id;
+  if (!projectId) throw new Error("proposal job: missing project_id");
 
   const { data: project } = await svc
     .from("projects")

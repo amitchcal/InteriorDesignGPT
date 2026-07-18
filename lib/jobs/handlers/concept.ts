@@ -1,6 +1,7 @@
 import { runConceptEngine } from "@/lib/engines/concept";
 import { loadMarketProfile } from "@/lib/market/load";
 import { conceptSchema, type Concept } from "@/types/concept";
+import { dnaSchema } from "@/types/dna";
 import { intakeSchema } from "@/types/project";
 import type { JobHandler } from "../types";
 
@@ -11,6 +12,7 @@ import type { JobHandler } from "../types";
  */
 export const conceptHandler: JobHandler = async (svc, job) => {
   const projectId = job.project_id;
+  if (!projectId) throw new Error("concept job: missing project_id");
   const onlyRoom = (job.payload.room as string | undefined) ?? null;
 
   const { data: project } = await svc
@@ -36,6 +38,23 @@ export const conceptHandler: JobHandler = async (svc, job) => {
     .limit(1)
     .maybeSingle();
 
+  // Designer-DNA (E2-5): if the project references a completed profile, pass it
+  // so the concept favours this designer's materials/palette over generic
+  // style. A profile whose dna hasn't been generated yet is skipped, not waited
+  // on — the concept still runs.
+  let designerDna: unknown = undefined;
+  if (intake.dna_id) {
+    const { data: dnaRow } = await svc
+      .from("designer_dna_profiles")
+      .select("dna")
+      .eq("id", intake.dna_id)
+      .maybeSingle();
+    // The row starts with an empty {} placeholder until its job fills it —
+    // validate so a not-yet-generated profile isn't passed as a DNA.
+    const parsed = dnaRow?.dna ? dnaSchema.safeParse(dnaRow.dna) : null;
+    if (parsed?.success) designerDna = parsed.data;
+  }
+
   const generated = await runConceptEngine({
     market_profile: profile.config,
     intake: {
@@ -44,6 +63,7 @@ export const conceptHandler: JobHandler = async (svc, job) => {
       preferences: intake.preferences,
       cultural_overrides: intake.cultural_overrides,
     },
+    designer_dna: designerDna,
     only_room: onlyRoom,
   });
 

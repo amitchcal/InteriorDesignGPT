@@ -56,6 +56,14 @@ export const intakeSchema = z.object({
    * pays for — build-tasks requires the rule be *confirmed* before Concept runs.
    */
   cultural_confirmed: z.array(z.string()).default([]),
+
+  /**
+   * A Designer-DNA profile to steer the concept toward this designer's style
+   * (E2-5). Optional; the Concept Engine passes it as `designer_dna` when set.
+   * Stored here rather than as a projects column to avoid a schema change — it's
+   * a soft reference the concept handler resolves at run time.
+   */
+  dna_id: z.string().uuid().nullish(),
 });
 
 export type Intake = z.infer<typeof intakeSchema>;

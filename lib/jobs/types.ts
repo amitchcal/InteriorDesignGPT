@@ -1,13 +1,14 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-export const jobKinds = ["concept", "boq", "proposal"] as const;
+export const jobKinds = ["concept", "boq", "proposal", "dna"] as const;
 export type JobKind = (typeof jobKinds)[number];
 
 export type JobStatus = "queued" | "running" | "done" | "failed";
 
 export type Job = {
   id: string;
-  project_id: string;
+  /** Null for DNA jobs — they're user-scoped, not project-scoped (0014). */
+  project_id: string | null;
   owner_id: string;
   kind: JobKind;
   status: JobStatus;

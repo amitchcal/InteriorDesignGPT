@@ -8,6 +8,7 @@ import type { JobHandler } from "../types";
 /** BOQ job — engine call, arithmetic recompute, and versioned persist. */
 export const boqHandler: JobHandler = async (svc, job) => {
   const projectId = job.project_id;
+  if (!projectId) throw new Error("boq job: missing project_id");
 
   const { data: project } = await svc
     .from("projects")

@@ -199,5 +199,28 @@
     "failed": "We couldn't render this room.",
     "timedOut": "The render is taking longer than expected. Try again.",
     "alt": "AI render of {room}"
+  },
+  "dna": {
+    "title": "Designer DNA",
+    "subtitle": "Upload past projects and we learn your style, so new concepts come out in your voice.",
+    "createTitle": "Train a new profile",
+    "nameLabel": "Profile name",
+    "namePlaceholder": "e.g. My signature style",
+    "imagesLabel": "Past project images",
+    "selected": "{count} selected",
+    "uploading": "Uploading…",
+    "analysing": "Learning your style…",
+    "createCta": "Create profile",
+    "failed": "We couldn't build that profile.",
+    "uploadFailed": "We couldn't upload those images.",
+    "thinHint": "Fewer than {n} images gives a rough profile — it sharpens as you add more work.",
+    "yoursTitle": "Your profiles",
+    "fromImages": "{count} images",
+    "materials": "Materials",
+    "colors": "Colours",
+    "layouts": "Layouts",
+    "signature": "Signature",
+    "applyLabel": "Designer DNA",
+    "noneOption": "None (generic style)"
   }
 }
