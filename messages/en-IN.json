@@ -222,5 +222,25 @@
     "signature": "Signature",
     "applyLabel": "Designer DNA",
     "noneOption": "None (generic style)"
+  },
+  "billing": {
+    "title": "Plans & billing",
+    "subtitle": "Priced for {market}. Upgrade to run more projects.",
+    "current": "You are on {plan} — {used} of {quota} projects used.",
+    "failed": "We couldn't start checkout.",
+    "freePrice": "Free",
+    "perMonth": "/mo",
+    "quota": "{n} projects",
+    "yourPlan": "Your plan",
+    "defaultPlan": "Default",
+    "choose": "Choose",
+    "starting": "Starting…"
+  },
+  "agency": {
+    "title": "Agency",
+    "subtitle": "Every project across your studio's designers.",
+    "noOrgs": "You don't own an agency yet. Create an organization to see all your designers' projects here.",
+    "noProjects": "No projects in this organization yet.",
+    "memberCount": "{count} members"
   }
 }

@@ -110,8 +110,9 @@ export async function POST(request: NextRequest) {
       );
     }
     if (error.message.includes("forbidden_org")) {
-      return apiError("validation_error", "You're not a member of that organization.", {
-        org_id: "not a member",
+      // Viewers are members but not editors — say so accurately (0015).
+      return apiError("validation_error", "You can't add projects to that organization.", {
+        org_id: "needs owner or designer role",
       });
     }
     if (error.message.includes("no_subscription")) return serverError();
