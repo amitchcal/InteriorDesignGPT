@@ -48,7 +48,14 @@ migrations, RLS, grants, seed all correct on the hosted DB.
    STRIPE_SECRET_KEY               # when billing goes live
    RAZORPAY_KEY_ID
    RAZORPAY_KEY_SECRET
+   VERCEL_TOKEN                    # optional — white-label custom-domain automation
+   VERCEL_PROJECT_ID              # optional — this project's id
+   VERCEL_TEAM_ID                 # optional — only if the project is under a team
    ```
+   The three `VERCEL_*` vars are optional: with them set, a studio adding a
+   custom domain auto-attaches it via the Vercel API; without them the app hands
+   out the CNAME and verifies it with a live DNS lookup. Branding (name / logo /
+   colours) needs none of them.
 3. Deploy. Vercel runs `npm run build`, and npm runs `prebuild` first — the unit
    suite + `tsc`. **A failing test or type error fails the deploy** (verified).
 

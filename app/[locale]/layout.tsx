@@ -5,6 +5,8 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 
 import { routing } from "@/i18n/routing";
+import { BrandBar } from "@/components/brand-bar";
+import { brandingCssVars, getRequestBranding } from "@/lib/branding/resolve";
 import "../globals.css";
 
 const geistSans = Geist({
@@ -28,8 +30,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "app" });
+  const branding = await getRequestBranding();
 
-  return { title: t("name"), description: t("tagline") };
+  // On a white-label domain the tab reads as the studio's brand, not ours.
+  const title = branding.org_id ? branding.brand_name : t("name");
+
+  return { title, description: t("tagline") };
 }
 
 export default async function LocaleLayout({
@@ -44,12 +50,23 @@ export default async function LocaleLayout({
 
   setRequestLocale(locale);
 
+  const branding = await getRequestBranding();
+  const cssVars = brandingCssVars(branding);
+
   return (
     <html
       lang={locale}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      {cssVars && (
+        // Tenant colour overrides. Injected server-side so there's no
+        // unbranded flash; only validated hex reaches here (brandingCssVars).
+        <head>
+          <style>{`:root{${cssVars}}`}</style>
+        </head>
+      )}
       <body className="min-h-full flex flex-col">
+        <BrandBar branding={branding} />
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
       </body>
     </html>

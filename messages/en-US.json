@@ -241,6 +241,33 @@
     "subtitle": "Every project across your studio's designers.",
     "noOrgs": "You don't own an agency yet. Create an organization to see all your designers' projects here.",
     "noProjects": "No projects in this organization yet.",
-    "memberCount": "{count} members"
+    "memberCount": "{count} members",
+    "brandingLink": "Branding & custom domains →"
+  },
+  "branding": {
+    "title": "Branding & domains",
+    "subtitle": "Make the app your own — your name, colors, logo, and a custom domain for your clients.",
+    "noOrgs": "Create an organization first, then you can white-label it here.",
+    "brandNameLabel": "Brand name",
+    "primaryLabel": "Primary color",
+    "accentLabel": "Accent color",
+    "logoLabel": "Logo",
+    "logoSet": "Logo uploaded — save to apply.",
+    "logoReady": "Logo uploaded. Save to apply it.",
+    "logoFailed": "We couldn't upload that logo.",
+    "saveCta": "Save branding",
+    "saving": "Saving…",
+    "saved": "Branding saved.",
+    "saveFailed": "We couldn't save your branding.",
+    "domainsTitle": "Custom domains",
+    "domainsHint": "Point your own domain at the app. Add it here, set the DNS record shown, then verify.",
+    "addDomain": "Add domain",
+    "domainFailed": "We couldn't add that domain.",
+    "status_pending": "Awaiting DNS",
+    "status_active": "Live",
+    "status_error": "Not resolving",
+    "dnsHint": "Set this DNS record at your registrar:",
+    "verify": "Verify",
+    "remove": "Remove"
   }
 }
