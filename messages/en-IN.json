@@ -253,7 +253,8 @@
     "noOrgs": "You don't own an agency yet. Create an organization to see all your designers' projects here.",
     "noProjects": "No projects in this organization yet.",
     "memberCount": "{count} members",
-    "brandingLink": "Branding & custom domains →"
+    "brandingLink": "Branding & custom domains →",
+    "teamLink": "Team & delegation →"
   },
   "branding": {
     "title": "Branding & domains",
@@ -280,5 +281,51 @@
     "dnsHint": "Set this DNS record at your registrar:",
     "verify": "Verify",
     "remove": "Remove"
+  },
+  "admin": {
+    "title": "Studios",
+    "subtitle": "Provision and manage the studios on the platform.",
+    "createTitle": "Add a studio",
+    "createHint": "The owner must have signed up already. Enter their account email; no invite is sent.",
+    "nameLabel": "Studio name",
+    "ownerEmailLabel": "Owner email",
+    "planLabel": "Plan",
+    "createCta": "Add studio",
+    "creating": "Adding…",
+    "createFailed": "We couldn't add that studio.",
+    "studiosTitle": "All studios",
+    "loading": "Loading…",
+    "loadFailed": "We couldn't load studios.",
+    "noStudios": "No studios yet.",
+    "colName": "Studio",
+    "colOwner": "Owner",
+    "colPlan": "Plan",
+    "colMembers": "Members",
+    "colStatus": "Status",
+    "colActions": "Actions",
+    "plan_starter": "Starter",
+    "plan_professional": "Professional",
+    "plan_studio": "Studio",
+    "status_active": "Active",
+    "status_suspended": "Suspended",
+    "suspend": "Suspend",
+    "activate": "Activate"
+  },
+  "team": {
+    "title": "Team and delegation",
+    "subtitle": "Assign projects to your designers, set due dates, and break work into tasks.",
+    "noOrgs": "Create a studio first to assign work to your team.",
+    "noProjects": "No projects in this studio yet.",
+    "unassigned": "Unassigned",
+    "unknown": "Unknown",
+    "assignee": "Assignee",
+    "dueDate": "Due date",
+    "taskProgress": "{done}/{total} tasks",
+    "noTasks": "No tasks yet.",
+    "taskPlaceholder": "Add a task…",
+    "addTask": "Add",
+    "markDone": "Mark done",
+    "removeTask": "Remove task",
+    "you": "you"
   }
 }

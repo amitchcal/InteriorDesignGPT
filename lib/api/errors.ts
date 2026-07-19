@@ -9,6 +9,7 @@ import type { ZodError } from "zod";
  */
 export const errorCodes = {
   unauthorized: 401,
+  forbidden: 403,
   validation_error: 422,
   not_found: 404,
   quota_exceeded: 402,
@@ -43,6 +44,9 @@ export function apiError(
 
 export const unauthorized = () =>
   apiError("unauthorized", "Sign in to continue.");
+
+export const forbidden = () =>
+  apiError("forbidden", "You don't have access to this.");
 
 export const notFound = (what = "that") =>
   apiError("not_found", `We couldn't find ${what}.`);
