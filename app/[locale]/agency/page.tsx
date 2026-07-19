@@ -39,12 +39,20 @@ export default async function AgencyPage({
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
         <p className="text-muted-foreground text-sm text-pretty">{t("subtitle")}</p>
-        <Link
-          href={`/${locale}/agency/branding`}
-          className="text-sm underline underline-offset-4"
-        >
-          {t("brandingLink")}
-        </Link>
+        <div className="flex flex-wrap gap-4">
+          <Link
+            href={`/${locale}/agency/branding`}
+            className="text-sm underline underline-offset-4"
+          >
+            {t("brandingLink")}
+          </Link>
+          <Link
+            href={`/${locale}/agency/team`}
+            className="text-sm underline underline-offset-4"
+          >
+            {t("teamLink")}
+          </Link>
+        </div>
       </div>
 
       {orgList.length === 0 ? (
