@@ -70,9 +70,11 @@ describe("table grants (bug #2 — RLS policies without GRANTs)", () => {
 });
 
 describe("storage buckets (bug #5 — missing UPDATE policy)", () => {
-  it("all four buckets are private", async () => {
+  it("the four asset buckets are private (brand-assets is intentionally public)", async () => {
     const { rows } = await asPostgres((c) =>
-      c.query("select id, public from storage.buckets order by id"),
+      c.query(
+        "select id, public from storage.buckets where id in ('floor-plans','renders','dna-assets','proposals') order by id",
+      ),
     );
     expect(rows.length).toBe(4);
     expect(rows.every((r) => r.public === false)).toBe(true);

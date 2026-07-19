@@ -32,6 +32,12 @@ beforeAll(async () => {
       "insert into org_members (org_id, user_id, role) values ($1,$2,'owner'),($3,$4,'owner') on conflict do nothing",
       [ORG, TEST_USERS.owner, OTHER_ORG, TEST_USERS.outsider],
     );
+    // A persistent domain on ORG. Seeded here (not via asUser, which rolls back)
+    // so the read / uniqueness / resolve tests below have a row to work against.
+    await c.query(
+      "insert into org_domains (org_id, hostname, status) values ($1,$2,'pending')",
+      [ORG, HOST],
+    );
   });
 });
 
@@ -45,11 +51,11 @@ afterAll(async () => {
 
 describe("org_domains RLS", () => {
   it("the org owner can add a domain; a non-owner cannot", async () => {
-    // Owner inserts — succeeds.
+    // Owner inserts a fresh hostname — succeeds (rolled back after the test).
     await asUser(TEST_USERS.owner, async (c) => {
       const { rowCount } = await c.query(
         "insert into org_domains (org_id, hostname, status) values ($1,$2,'pending')",
-        [ORG, HOST],
+        [ORG, "owner-add.example"],
       );
       expect(rowCount).toBe(1);
     });
